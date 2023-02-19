@@ -3,11 +3,14 @@ package ma.enset.blocking;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
-public class MultiThreadServer extends Thread{
+public class MultiThreadChatServer extends Thread{
+    private List<Conversation> conversations=new ArrayList<>();
     private int clientCount;
     public static void main(String[] args) {
-        new MultiThreadServer().start();
+        new MultiThreadChatServer().start();
     }
 
     @Override
@@ -18,7 +21,9 @@ public class MultiThreadServer extends Thread{
             while(true){
                 Socket socket=serverSocket.accept();
                 ++clientCount;
-                new Conversation(socket,clientCount).start();
+                Conversation conversation = new Conversation(socket, clientCount);
+                conversations.add(conversation);
+                conversation.start();
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -49,8 +54,7 @@ public class MultiThreadServer extends Thread{
                 while((request=br.readLine())!=null){
                     //String request=br.readLine();
                     System.out.println("request IP => "+IP);
-                    String response="size : "+request.length();
-                    pw.println(response);
+                    prodcastMessage(request,this);
 
                 }
             } catch (IOException e) {
@@ -58,5 +62,20 @@ public class MultiThreadServer extends Thread{
             }
 
         }
+    }
+    public void prodcastMessage(String message, Conversation from){
+        try {
+            for (Conversation conversation:conversations ) {
+                if(conversation!=from) {
+                    Socket socket = conversation.socket;
+                    OutputStream outputStream = socket.getOutputStream();
+                    PrintWriter printWriter = new PrintWriter(outputStream, true);
+                    printWriter.println(message);
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }
