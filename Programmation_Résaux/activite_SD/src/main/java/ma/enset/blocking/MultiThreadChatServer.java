@@ -5,6 +5,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SimpleTimeZone;
+import java.util.stream.Collectors;
 
 public class MultiThreadChatServer extends Thread{
     private List<Conversation> conversations=new ArrayList<>();
@@ -54,7 +56,27 @@ public class MultiThreadChatServer extends Thread{
                 while((request=br.readLine())!=null){
                     //String request=br.readLine();
                     System.out.println("request IP => "+IP);
-                    prodcastMessage(request,this);
+                    List<Integer> clientsTo=new ArrayList<>();
+                    String message;
+                    if(request.contains("=>")) {
+                        String[] items = request.split("=>");
+                        String clients=items[0];
+                         message=items[1];
+                        if(clients.contains(",")){
+                            String[] clientIDs = clients.split(",");
+                           for(String id:clientIDs){
+                               clientsTo.add(Integer.parseInt(id));
+                           }
+                        }else{
+                            clientsTo.add(Integer.parseInt(clients));
+                        }
+                       // prodcastMessage(request, this);
+                    }else{
+                        clientsTo=conversations.stream().map(c->c.clientId).collect(Collectors.toList());
+                        message=request;
+
+                    }
+                    prodcastMessage(message,this,clientsTo);
 
                 }
             } catch (IOException e) {
@@ -63,10 +85,10 @@ public class MultiThreadChatServer extends Thread{
 
         }
     }
-    public void prodcastMessage(String message, Conversation from){
+    public void prodcastMessage(String message, Conversation from,List<Integer> clients){
         try {
             for (Conversation conversation:conversations ) {
-                if(conversation!=from) {
+                if(conversation!=from && clients.contains(conversation.clientId)) {
                     Socket socket = conversation.socket;
                     OutputStream outputStream = socket.getOutputStream();
                     PrintWriter printWriter = new PrintWriter(outputStream, true);

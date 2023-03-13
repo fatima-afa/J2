@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thyemleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thyemleaf/layout"
+      layout:decorate="template1"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Form Patients</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/5.2.3/css/bootstrap.min.css"
+
+
+   />
+
+</head>
+<body>
+<div layout:fragment="content1">
+
+    <form method="post" th:action="@{save}">
+        <div>
+            <label >Nom</label>
+            <input class="form-control" type="text" name="name" th:value="${patient.name}">
+            <span th:errors="${patient.name}"></span>
+
+        </div>
+        <div>
+            <label>Date naissance</label>
+            <input class="form-control" type="date" name="dateNaissance" th:value="${patient.dateNaissance}">
+            <span th:errors="${patient.dateNaissance}"></span>
+
+        </div>
+        <div>
+            <label>Malade</label>
+            <input type="checkbox" name="malade" th:checked="${patient.malade}">
+            <span th:errors="${patient.malade}"></span>
+
+        </div>
+        <div>
+            <label>Score</label>
+            <input  class="form-control" type="text" name="score" th:value="${patient.score}">
+            <span th:errors="${patient.score}"></span>
+
+        </div>
+        <button type="submit" class="btn-primary">save</button>
+
+    </form>
+
+<div class="container mt-2">
+
+
+    </div>
+
+</div>
+
+</div>
+</body>
+</html>
