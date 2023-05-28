@@ -33,7 +33,7 @@ public class SecurityConfig  {
         httpSecurity.formLogin().loginPage("/login").permitAll();
         httpSecurity.authorizeHttpRequests().requestMatchers("/webjars/**").permitAll();
        // httpSecurity.rememberMe();
-       // httpSecurity.authorizeHttpRequests().requestMatchers("/user/**").hasRole("USER");
+       // httpSecurity.authorizeHttpRequests().requestMatchers("/user/**").hasRole("USER"); //j'ai les remplacer par l'annotation @EnableMethodSecurity(prePostEnabled = true) et aussi dans chaque methode j'ai ajoutee une annotation
       //  httpSecurity.authorizeHttpRequests().requestMatchers("/admin/**").hasRole("ADMIN");
         // on va les remplaces avec l'annotation @EnableMethodSecurity(prePostEnabled = true), aussi danc le controleur
         httpSecurity.authorizeHttpRequests().anyRequest().authenticated();
