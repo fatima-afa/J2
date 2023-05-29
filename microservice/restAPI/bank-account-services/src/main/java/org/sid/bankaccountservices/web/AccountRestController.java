@@ -3,13 +3,16 @@ package org.sid.bankaccountservices.web;
 import lombok.AllArgsConstructor;
 import org.sid.bankaccountservices.entities.BankAccount;
 import org.sid.bankaccountservices.reposetories.BankAccountRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
 @RestController
+@AllArgsConstructor
 public class AccountRestController {
+    @Autowired
     private BankAccountRepository bankAccountRepository;
 
     public AccountRestController(BankAccountRepository bankAccountRepository) {
